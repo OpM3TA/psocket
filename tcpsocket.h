@@ -11,6 +11,7 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
+// I am changing this soon. I'll probably return something besides a string.
 #define ConnectErr "Error on connect()"
 #define CreateSockErr "Error on socket()"
 #define GetAddrInfoErr "getaddrinfo failed"
