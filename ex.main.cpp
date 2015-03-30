@@ -1,14 +1,14 @@
 #include "tcpsocket.h"
 
-
 using namespace std;
-
 
 int main()
 {
 	tcpsocket *sock = new tcpsocket();
 	sock->init();
-	int r = sock->pconnect("192.168.1.8", "1234");
-	printf("%d", r);
+	int res = sock->pconnect("192.168.1.8", "1234");
+	if (res== 0) {
+			sock->psend("Hello, World!\n");
+	}
 	getchar();
 }
