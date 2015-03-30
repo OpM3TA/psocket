@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <WinSock2.h>
 #include <Windows.h>
@@ -6,8 +5,9 @@
 #include <iphlpapi.h>
 #include <stdio.h>
 
+
 // Lets link some libs
-#pragma comment (lib, "Ws2_32.lib") // so hawt
+#pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
@@ -29,8 +29,9 @@ private:
 	//struct ReturnStatus { char* ErrMsg; int status; };
 
 public:
-	tcpsocket();
+	//tcpsocket();
 
+	int init();
 	int pconnect(char* IPAddress, char* Port);
 	int psend(char *);
 	void pclose();
