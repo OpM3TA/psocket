@@ -11,28 +11,28 @@
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-// I am changing this soon. I'll probably return something besides a string.
-#define ConnectErr "Error on connect()"
-#define CreateSockErr "Error on socket()"
-#define GetAddrInfoErr "getaddrinfo failed"
-#define OK "OK"
+// Not in use right now.
+// If it errors it returns the 'id' of the error from WSAGetLastError()
+#define OK 0
+#define ConnectErr -1
+#define CreateSockErr -2
+#define GetAddrInfoErr -3
+
 
 
 class tcpsocket{
 
 private:
-	int iResult;
+	int pResult;
 	struct addrinfo *result = NULL, *ptr = NULL, hints;
 	SOCKET ConnectSocket;
-	// For the future. So instead of printing the WSAError/whatever I 
-	// can just return it and check the status (0/1) and the error returned
-	struct ReturnStatus { char* ErrMsg; int status; };
+	//struct ReturnStatus { char* ErrMsg; int status; };
 
 public:
 	tcpsocket();
 
-	tcpsocket::ReturnStatus pconnect(char* IPAddress, char* Port);
-	tcpsocket::ReturnStatus psend(char *);
+	int pconnect(char* IPAddress, char* Port);
+	int psend(char *);
 	void pclose();
 	char* precv(int bytes);
 	
