@@ -1,3 +1,4 @@
+// This define will be going bye-bye soon.
 #define _CRT_SECURE_NO_WARNINGS
 #include "tcpsocket.h"
 
@@ -25,11 +26,10 @@ int tcpsocket::init()
 
 char * tcpsocket::precv(int buffer)
 {
-	int bytes_recv = 0;
 	char *toRecv = new char[buffer+1]; // I hope this isn't unnecessary
 	memset(toRecv, 0x0, buffer); // Bad junkie
-	bytes_recv = recv(ConnectSocket, toRecv, buffer, 0);
-
+	recv(ConnectSocket, toRecv, buffer, 0);
+	// What about checking bytes_recv perhaps I might do that.
 	return toRecv;
 }
 
