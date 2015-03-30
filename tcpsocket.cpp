@@ -1,11 +1,9 @@
-#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include "tcpsocket.h"
 
 
 
-
-tcpsocket::tcpsocket()
+int tcpsocket::init()
 {
 	WSADATA wsaData;
 
@@ -15,15 +13,16 @@ tcpsocket::tcpsocket()
 	// Setup the socket stuff
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP;
+	hints.ai_socktype = SOCK_STREAM; // Tcp
+	hints.ai_protocol = IPPROTO_TCP; // Tcp
+
+	return pResult;
 
 }
 
 
 
-/// SOO tired!
-// I hope I am not making too many mistakes
+
 char * tcpsocket::precv(int buffer)
 {
 	int bytes_recv = 0;
