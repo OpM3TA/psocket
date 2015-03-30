@@ -10,7 +10,7 @@ tcpsocket::tcpsocket()
 	WSADATA wsaData;
 
 	// Initialize Winsock
-	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	pResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
 	// Setup the socket stuff
 	ZeroMemory(&hints, sizeof(hints));
@@ -29,8 +29,6 @@ char * tcpsocket::precv(int buffer)
 	int bytes_recv = 0;
 	char *toRecv = new char[buffer+1]; // I hope this isn't unnecessary
 	memset(toRecv, 0x0, buffer); // Bad junkie
-
-	// Receive some data
 	bytes_recv = recv(ConnectSocket, toRecv, buffer, 0);
 
 	return toRecv;
@@ -43,23 +41,21 @@ void tcpsocket::pclose()
 	printf("Closed Socket -> %u\n", ConnectSocket);
 }
 
-tcpsocket::ReturnStatus tcpsocket::psend(char * sendbuf)
+int tcpsocket::psend(char * sendbuf)
 {
-	ReturnStatus psendStatus;
-	psendStatus.status = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
-	return psendStatus;
+	pResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
+	return pResult;
 }
-tcpsocket::ReturnStatus tcpsocket::pconnect(char* IPAddress, char * Port)
+
+
+
+int tcpsocket::pconnect(char* IPAddress, char * Port)
 {
-	ReturnStatus pconnectStatus;
-	pconnectStatus.status = 0;
-	pconnectStatus.ErrMsg = "OK";
-	iResult = getaddrinfo(IPAddress, Port, &hints, &result);
-	if (iResult != 0) {
-		pconnectStatus.ErrMsg, "getaddrinfo failed";
-		pconnectStatus.status = 1;
+
+	pResult = getaddrinfo(IPAddress, Port, &hints, &result);
+	if (pResult != 0) {
 		WSACleanup();
-		return pconnectStatus;
+		return WSAGetLastError();
 	}
 
 	ConnectSocket = INVALID_SOCKET;
@@ -67,23 +63,18 @@ tcpsocket::ReturnStatus tcpsocket::pconnect(char* IPAddress, char * Port)
 	ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
 	if (ConnectSocket == INVALID_SOCKET) {
-		pconnectStatus.ErrMsg = "Error on socket()";
 		freeaddrinfo(result);
 		WSACleanup();
-		pconnectStatus.status = 1;
-		return pconnectStatus;
+		return WSAGetLastError();
 	}
 
-	iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+	pResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 
-	if (iResult == SOCKET_ERROR) {
-		pconnectStatus.ErrMsg = "Error on connect()";
+	if (pResult == SOCKET_ERROR) {
 		closesocket(ConnectSocket);
 		ConnectSocket = INVALID_SOCKET;
-		pconnectStatus.status = 1;
-		
-		return pconnectStatus;
+		return WSAGetLastError();
 	}
 	
-	return pconnectStatus;
+	return 0;
 }
