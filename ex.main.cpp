@@ -1,19 +1,20 @@
 #include "tcpsocket.h"
-
+#include <fstream>
 
 using namespace std;
 
 
 int main()
 {
+
 	tcpsocket *sock = new tcpsocket();
 	sock->init();
-	int testsock = sock->pconnect("192.168.1.8", "1234");
+	int testsock = sock->connect_("192.168.1.8", "80");
 	if (testsock == 0) {
-			sock->psend("Hello, World!\n");
-			char *msg = sock->precv(50); // Would recv 50 bytes of data that the server sends.
-			printf(msg);
-			delete[] msg; // pew pew
+		sock->send_("Hello");
+		char *msg = sock->recv_(1050);
+	
+
 	}
 	delete sock;
 	getchar();
