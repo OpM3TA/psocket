@@ -1,4 +1,3 @@
-// This define will be going bye-bye soon.
 #define _CRT_SECURE_NO_WARNINGS
 #include "tcpsocket.h"
 
@@ -23,24 +22,25 @@ int tcpsocket::init()
 
 
 
-
-char * tcpsocket::precv(int buffer)
+// improve using select() and recv'ing all
+char * tcpsocket::recv_(int buffer)
 {
+	
 	char *toRecv = new char[buffer+1]; // I hope this isn't unnecessary
 	memset(toRecv, 0x0, buffer); // Bad junkie
 	recv(ConnectSocket, toRecv, buffer, 0);
-	// What about checking bytes_recv perhaps I might do that.
+	
 	return toRecv;
 }
 
-void tcpsocket::pclose()
+void tcpsocket::close_()
 {
 	closesocket(ConnectSocket);
 	WSACleanup();
 	printf("Closed Socket -> %u\n", ConnectSocket);
 }
 
-int tcpsocket::psend(char * sendbuf)
+int tcpsocket::send_(char * sendbuf)
 {
 	pResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
 	return pResult;
@@ -48,10 +48,11 @@ int tcpsocket::psend(char * sendbuf)
 
 
 
-int tcpsocket::pconnect(char* IPAddress, char * Port)
+int tcpsocket::connect_(char* IPAddress, char * Port)
 {
 
 	pResult = getaddrinfo(IPAddress, Port, &hints, &result);
+
 	if (pResult != 0) {
 		WSACleanup();
 		return WSAGetLastError();
